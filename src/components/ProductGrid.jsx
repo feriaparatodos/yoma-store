@@ -1,8 +1,23 @@
+import { useState } from 'react'
 import ProductCard from './ProductCard'
+import ProductModal from './ProductModal'
 
 function ProductGrid({ productos, onAgregarAlCarrito }) {
+  const [productoSeleccionado, setProductoSeleccionado] = useState(null)
+  const [mostrarModal, setMostrarModal] = useState(false)
+
   const bolsos = productos.filter(p => p.tipo === 'bolso')
   const manillas = productos.filter(p => p.tipo === 'manilla')
+
+  const abrirModal = (producto) => {
+    setProductoSeleccionado(producto)
+    setMostrarModal(true)
+  }
+
+  const cerrarModal = () => {
+    setMostrarModal(false)
+    setTimeout(() => setProductoSeleccionado(null), 300)
+  }
 
   return (
     <>
@@ -23,6 +38,7 @@ function ProductGrid({ productos, onAgregarAlCarrito }) {
                 <ProductCard 
                   producto={producto} 
                   onAgregar={onAgregarAlCarrito}
+                  onVerDetalles={abrirModal}
                 />
               </div>
             ))}
@@ -50,12 +66,21 @@ function ProductGrid({ productos, onAgregarAlCarrito }) {
                 <ProductCard 
                   producto={producto} 
                   onAgregar={onAgregarAlCarrito}
+                  onVerDetalles={abrirModal}
                 />
               </div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* Modal de producto */}
+      <ProductModal
+        producto={productoSeleccionado}
+        mostrar={mostrarModal}
+        onCerrar={cerrarModal}
+        onAgregarAlCarrito={onAgregarAlCarrito}
+      />
     </>
   )
 }
